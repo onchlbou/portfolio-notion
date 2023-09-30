@@ -1,4 +1,4 @@
-#### Info
+## Info
 
 Edit and start the proxy server file:  
 
@@ -14,10 +14,11 @@ set variables:
  - proxy_port  
  - menu_id  
 
-Then run:    
-npm run build    
-npm start    
+Then run:
+    
+	npm run build      
+	npm start    
 
-#### Example  
+## Example  
 
 https://nathanhue.com
