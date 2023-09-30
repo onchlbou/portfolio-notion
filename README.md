@@ -8,7 +8,7 @@ In the file
  
 	html/pages/index.tsx  
 
-set variables:  
+Set variables:  
  - prod  
  - proxy_domain  
  - proxy_port  
