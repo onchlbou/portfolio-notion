@@ -1,9 +1,13 @@
 #### Info
 
 Edit and start the proxy server file:  
-node express_server/index.js  
 
-In the file html/index.tsx  
+	node express_server/index.js  
+
+In the file  
+ 
+	html/pages/index.tsx  
+
 set variables:  
  - prod  
  - proxy_domain  
