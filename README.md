@@ -29,3 +29,5 @@ https://nathanhue.com
 	pm2 start ./start_back.sh --name "nathanhue-portfolio-back"  
 	pm2 start ./start_front.sh --name "nathanhue-portfolio-front"  
 	pm2 save
+	pm2 list
+	pm2 delete all
