@@ -22,3 +22,10 @@ Then run:
 ## Example  
 
 https://nathanhue.com
+
+
+## Run in the background
+
+	pm2 start ./start_back.sh --name "nathanhue-portfolio-back"  
+	pm2 start ./start_front.sh --name "nathanhue-portfolio-front"  
+	pm2 save
