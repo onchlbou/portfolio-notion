@@ -12,7 +12,10 @@
 }
 
 .notion .notion-page {
-    padding: 30px; /* add some padding to ensure the content isn't too close to the edges */
+    padding: 0; /* Reset padding for top, right, and bottom */
+    padding-left: 30px; /* Apply padding to the left side */
+    padding-right: 30px; /* Apply padding to the right side */
+    padding-bottom: 30px; /* Apply padding to the right side */
 }
 
 .notion-title {
@@ -77,6 +80,8 @@ button[onClick*="refreshAllCaches"] {
     border: none;
     font-size: 16px;
     cursor: pointer;
+    align-items: center;
+    justify-content: center;
     transition: background-color 0.2s ease-in-out;
 }
 
