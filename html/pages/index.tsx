@@ -3,6 +3,7 @@ import { NotionRenderer, BlockMapType } from 'react-notion';
 import Head from 'next/head';
 import fetch from 'node-fetch';
 import Button from '../components/Button';
+import Favicon from '../components/Favicon';
 
 
 const prod = true;
@@ -15,6 +16,7 @@ const Home = () => {
   const [blockMap, setBlockMap] = useState<BlockMapType | null>(null);
   const [menuData, setMenuData] = useState<any>({});
   const [selectedSection, setSelectedSection] = useState<string>('');
+  const [pageIds, setPageIds] = useState<string[]>([]); 
 
   const handlePageLinkClick = (event, blockValue) => {
     event.preventDefault();
@@ -24,11 +26,10 @@ const Home = () => {
   };
 
   function fetchURL(prod, id) {
-    if (prod) {
-      return `https://${proxy_domain}:${proxy_port}/fetchNotionData/${id}`;
-    } else {
-      return `https://notion-api.splitbee.io/v1/page/${id}`;
-    }
+    const protocol = prod ? 'https' : 'http';
+    const query = `${protocol}://${proxy_domain}:${proxy_port}/fetchNotionData/${id}`;
+    console.log("fetchUrl:", query)
+    return query;
   }
 
   const fetchPageData = async (pageId: string) => {
@@ -45,9 +46,14 @@ const Home = () => {
 
   const fetchMenuTableData = async () => {
     const results: { [key: string]: { button: string; url: string; id: string } } = {};
+    const fetchedPageIds: string[] = []; 
+
+
     try {
       const url = fetchURL(prod, menu_id);
+      //console.log('Fetching data from:', url);
       const response = await fetch(url);
+      //console.log('Server Response:', response);
       const data: BlockMapType = await response.json();
       const blockIds = Object.keys(data);
       const propertyKeys = ["N<XM", "QOJ>"];
@@ -65,14 +71,36 @@ const Home = () => {
                       url: urlValue,
                       id: id
                   };
+                  fetchedPageIds.push(id); 
               }
           }
       });
       console.log(results)
+      setPageIds(fetchedPageIds);
     } catch (error) {
       console.error("Error fetching menu table data:", error);
     }
     setMenuData(results);
+  };
+
+  const refreshAllCaches = async () => {
+    try {
+        const url = prod ? `https://${proxy_domain}:${proxy_port}/refreshCache` : `http://localhost:${proxy_port}/refreshCache`;
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pageIds: pageIds }) 
+        };
+        
+        const response = await fetch(url, requestOptions);
+        if (response.status === 200) {
+            console.log("Cache refreshed successfully.");
+        } else {
+            console.error("Failed to refresh cache.");
+        }
+    } catch (error) {
+        console.error("An error occurred while refreshing the cache:", error);
+    }
   };
 
   useEffect(() => {
@@ -97,19 +125,24 @@ const Home = () => {
   return (
     <div>
       <Head>
-        <style>{`body { margin: 10;}`}</style>
-        <title>portfolio</title>
+          <Favicon/>
+          <title>Nathan Hue | Portfolio</title>
+          <meta name="description" content="Portfolio made with typescript and notion.so as a cms." />
+          <meta name="keywords" content="Cyber Programming Security Typescript Engineer React Python Exploit Network Concept" />
       </Head>
       <div className="App">
         <pre className="banner">{banner}</pre>
+        <button className="refresh-button" onClick={refreshAllCaches} style={{ position: 'absolute', top: '10px', right: '10px' }}>
+            ⟳
+        </button>
         <div className="button-container">
-          {Object.values(menuData).map((item: any) => (
-            <Button
-              key={item.id}
-              label={item.button}
-              onClick={() => setSelectedSection(item.id)}
-            />
-          ))}
+            {Object.values(menuData).map((item: any) => (
+                <Button
+                    key={item.id}
+                    label={item.button}
+                    onClick={() => setSelectedSection(item.id)}
+                />
+            ))}
         </div>
       </div>
       <br />
