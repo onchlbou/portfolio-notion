@@ -7,6 +7,7 @@ import Favicon from '../components/Favicon';
 
 
 const prod = true;
+//const proxy_domain = "localhost";
 const proxy_domain = "nathanhue.com";
 const proxy_port = "3001";
 const menu_id = "34f3c0490b0d436a9b3821f8e6844b9c";
@@ -16,7 +17,15 @@ const Home = () => {
   const [blockMap, setBlockMap] = useState<BlockMapType | null>(null);
   const [menuData, setMenuData] = useState<any>({});
   const [selectedSection, setSelectedSection] = useState<string>('');
-  const [pageIds, setPageIds] = useState<string[]>([]); 
+  const [pageIds, _setPageIds] = useState<string[]>([]); 
+
+  const setPageIds = (newPageIds: string[]) => {
+    if (!newPageIds.includes(menu_id)) {
+      _setPageIds([menu_id, ...newPageIds]);
+    } else {
+      _setPageIds(newPageIds);
+    }
+  }
 
   const handlePageLinkClick = (event, blockValue) => {
     event.preventDefault();
